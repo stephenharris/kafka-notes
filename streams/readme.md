@@ -12,6 +12,8 @@ Next to authenticate and decrypt responses we need the broker's certificate (whi
     keytool -import -file ca.cert -alias CA -keystore client.truststore.jks
     # To retrieve the certificate from the trustore
     # keytool -export -file ca.cert -alias CA -keystore client.truststore.jks
+    # To convert .cert to pem if required:
+    # openssl x509 -in ca.cert -inform DER -out ca.pem -outform PEM
 
 Both the keystore and truststore are password protected.
 
