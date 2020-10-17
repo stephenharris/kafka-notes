@@ -1,0 +1,12 @@
+kafka.config
+.terraform
+.env
+kubeconfig
+terraform.tfstate*
+*/store/*.cert
+*/store/*.pem
+*/store/*.p12
+*/store/*.jks
+*/store/*.key
+kafka_2.13-2.6.0
+*/terraform/test.tfvars

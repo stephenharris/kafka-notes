@@ -1,0 +1,10 @@
+security.protocol=SSL
+ssl.endpoint.identification.algorithm=
+ssl.protocol=TLS
+ssl.key.password=<SLL_KEY_PASSWORD>
+ssl.keystore.location=/path/to/client.keystore.p12
+ssl.keystore.password=<KEYSTORE_PASSWORD>
+ssl.keystore.type=PKCS12
+ssl.truststore.location=/path/to/client.truststore.jks
+ssl.truststore.password=<TRUSTSTORE_PASSWORD>
+ssl.truststore.type=JKS
