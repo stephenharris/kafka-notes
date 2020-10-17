@@ -1,0 +1,4 @@
+kafka-python
+prometheus_client==0.8.0
+Flask==1.0.2
+flask-prometheus==0.0.1

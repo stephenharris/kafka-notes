@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-rollout-app-service
+  labels:
+    app: kafka-rollout-app
+spec:
+  clusterIP: None
+  selector:
+    app: kafka-rollout-app
+  ports:
+    - name: metrics
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: kafka-rollout-app
+spec:
+  serviceName: "kafka-rollout-app-service"
+  replicas: 2
+  strategy:
+    canary:
+      steps:
+      - setWeight: 50
+      - pause: {}
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: kafka-rollout-app
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app: kafka-rollout-app
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+    spec:
+      containers:
+      - name: kafka-rollout-app
+        image: stephenharris13/kafka-rollout-app:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+        env:
+          - name: VERSION
+            value: "1"
+          - name: BOOTSTRAP_SERVER
+            value: kafka-3ca2c5e3-stephenh1988-adba.aivencloud.com:11435
+          - name: PATH_TO_CERT
+            value: /etc/cert
+          - name: CONSUME_TOPIC
+            value: rollout-test
+          - name: PRODUCE_TOPIC
+            value: rollout-test-output
+        volumeMounts:
+          - name: kafka-secrets
+            readOnly: true
+            mountPath: "/etc/cert"
+      volumes:
+      - name: kafka-secrets
+        secret:
+          secretName: kafka-secrets      
+
