@@ -27,6 +27,9 @@ spec:
       steps:
       - setWeight: 50
       - pause: {}
+      - analysis:
+          templates:
+          - templateName: httpbin
   revisionHistoryLimit: 2
   selector:
     matchLabels:
@@ -65,4 +68,23 @@ spec:
       - name: kafka-secrets
         secret:
           secretName: kafka-secrets      
-
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: httpbin
+spec:
+  metrics:
+  - name: webmetric
+    successCondition: result == 'true'
+    interval: 10s
+    count: 5
+    failureLimit: 2
+    provider:
+      web:
+        # placeholders are resolved when an AnalysisRun is created 
+        url: "https://httpbin.org/anything?result=true"
+        headers:
+          - key: Accept
+            value: "application/json"
+        jsonPath: "{$.args.result}" 
